@@ -1,144 +1,69 @@
-class Tree {
-    constructor() {
-        this.root = new Node
-    }
-
-
-    buildTree(array) {
-        let filtArray = removeDuplicates(array);
-        let sortedArray = filtArray.sort();
-        return assignBranches(sortedArray, this.root);
-    }
-
-    insert(data) {
-        return traverseAdd(this.root, data);
-    }
-
-    delet(data) {
-
-    }
-
-}
-
-class Node {
-    constructor() {
-        this.data = null
-        this.left = null
-        this.right = null
-    }
-
-    setData(data) {
-        this.data = data
-    }
-
-    setLeft(leftChild) {
-        this.left = leftChild
-    }
-
-    setRight(rightChild) {
-        this.right = rightChild
+// JavaScript program to print BST in given range
+// A binary tree node
+class Node
+{
+    constructor(d)
+    {
+        this.data = d;
+        this.left = null;
+        this.right = null;
     }
 }
 
+class BinarySearchTree {
+    constructor(arr) {
+        let sortedArray = removeDupes(arr.sort())
+        this.root = this.buildTree(sortedArray, 0, sortedArray.length - 1);
+    }
+
+    buildTree(arr, start, end) {
+        if (start > end) {
+            return null;
+        }
+
+        let mid = parseInt((start + end) / 2);
+        let node = new Node(arr[mid]);
+
+        node.left = this.buildTree(arr, start, mid - 1);
+        node.right = this.buildTree(arr, mid + 1, end);
+
+        return node;
+    }
+}
+
+ 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
-  if (node.right !== null) {
-    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-  }
-  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
-  if (node.left !== null) {
-    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-  }
-}
-
-function removeDuplicates(array) {
-    return array.filter((item, index) => array.indexOf(item) === index);      
-}
-
-function assignBranches(array, curNode, leftArr = [], rightArr = []) {
-    
-    if (array.length === 2) {
-        const leftNode = new Node
-        curNode.left = leftNode
-        leftNode.setData(array[0]) 
-        curNode.setData(array[1])
-        return;
-    } 
-    
-    if (array.length === 1) {
-        curNode.setData(array[0])
-        return;
+    if (node.right !== null) {
+        prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
     }
-     
+    console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+    if (node.left !== null) {
+        prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+    }
+}
 
-    let mid = array[Math.floor(array.length/2)];
+function preOrder(node, preArr = [])
+{
+    if (node == null)
+    {
+        let newArr = preArr
+        return newArr;
+    }
+    preArr.push(node.data);
+    preOrder(node.left, preArr);
+    return preOrder(node.right, preArr);
+}
 
-    for (let i = 0; i < array.length; i++) {
-        if (array[i] < mid) {
-            leftArr.push(array[i])
-        } else if (array[i] > mid) {
-            rightArr.push(array[i])
+function removeDupes(arr) {
+    let uniqueNumb = [];
+    arr.forEach((c) => {
+        if (!uniqueNumb.includes(c)) {
+            uniqueNumb.push(c);
         }
-    }
-
-    curNode.setData(mid);
-    const rightNode = new Node;
-    curNode.right = rightNode;
-    const leftNode = new Node;
-    curNode.left = leftNode;
-    assignBranches(leftArr, leftNode);
-    assignBranches(rightArr, rightNode);
+    });
+    return uniqueNumb;
 }
 
-function grabData(curNode, dataArray) {
-    if (curNode === null) {
-        console.log(dataArray)
-        return dataArray;
-    }
-
-    console.log(curNode)
-
-    dataArray.push(curNode.data)
-    console.log(dataArray)
-
-
-    grabData(curNode.left, dataArray)
-    grabData(curNode.right, dataArray);
-}
-
-function traverseAdd(curNode, data) {
-    if (curNode.left === null && curNode.right === null) {
-        const dataNode = new Node;
-        dataNode.setData(data);
-        if (data < curNode.data) {
-            curNode.left = dataNode;
-        } else if (data > curNode.data) {
-            curNode.right = dataNode;
-        }
-        return;
-    }
-
-    if (data < curNode.data) {
-        return traverseAdd(curNode.left, data);
-    } else if (data > curNode.data) {
-        return traverseAdd(curNode.right, data);
-    } else if (data === curNode.data) {
-         return "data already included in tree!";
-    }
-}
-
-function traverseRemove() {
-    
-}
-
-
-
-
-
-
-const tree1 = new Tree
-
-tree1.buildTree([2,1,3,2,8, 5,7, 6, 6, 6 ,7 ,90]);
-
-tree1.insert(3)
-prettyPrint(tree1.root)
-
+const root = new BinarySearchTree([1,2,3,4,5,6,7,8,9]);
+prettyPrint(root.root);
+console.log(preOrder(root.root));
