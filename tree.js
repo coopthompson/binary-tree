@@ -1,5 +1,3 @@
-// JavaScript program to print BST in given range
-// A binary tree node
 class Node
 {
     constructor(d)
@@ -69,10 +67,6 @@ class BinarySearchTree {
             return root;
         }
  
-        // We reach here when root is the node
-        // to be deleted.
- 
-        // If one of the children is empty
         if (root.left == null) {
             let temp = root.right;
             return temp;
@@ -81,11 +75,9 @@ class BinarySearchTree {
             return temp;
         }
  
-        // If both children exist
         else {
             let succParent = root;
  
-            // Find successor
             let succ = root.right;
  
             while (succ.left !== null) {
@@ -93,18 +85,11 @@ class BinarySearchTree {
                 succ = succ.left;
             }
  
-            // Delete successor. Since successor
-            // is always left child of its parent
-            // we can safely make successor's right
-            // right child as left of its parent.
-            // If there is no succ, then assign
-            // succ->right to succParent->right
             if (succParent !== root)
                 succParent.left = succ.right;
             else
                 succParent.right = succ.right;
  
-            // Copy Successor Data to root
             root.data = succ.data;
  
             return root;
@@ -124,28 +109,64 @@ const prettyPrint = (node = tree.root, prefix = '', isLeft = true) => {
     }
 }
 
-function preOrder(node, preArr = [])
-{
-
-    if (node === null)
-    {
-        let newArr = preArr
-        return newArr;
+function curLevel(root, levelArr = [], level) {
+    if (root === null) {
+        return levelArr;
     }
-    preArr.push(node.data);
-    preOrder(node.left, preArr);
-    return preOrder(node.right, preArr);
+    if (level === 1) {
+        levelArr.push(root.data);
+    } else if (curLevel > 0) {
+        levelOrder(root.left, levelArr, level - 1);
+        levelOrder(root.right, levelArr, level -1);
+    }
+
+    return levelArr;
 }
 
-function inOrder(root)
-{
-    let minv = root.data;
-        while (root.left !== null)
-        {
-            minv = root.left.data;
-            root = root.left;
+function levelOrder(root, levelArr = []) {
+    let queue = [];
+    queue.push(root);
+    while (queue.length !== 0) {
+        let tempNode = queue.shift();
+        levelArr.push(tempNode.data);
+
+        if (tempNode.left !== null) {
+            queue.push(tempNode.left);
         }
-        return minv;
+    
+        if (tempNode.right !== null) {
+            queue.push(tempNode.right);
+        }
+    }
+    return levelArr;
+}
+
+function preOrder(root, preArr = [])
+{
+    if (root !== null) {
+        preArr.push(root.data);
+        preOrder(root.left, preArr);
+        preOrder(root.right, preArr);  
+    }
+    return preArr;
+}
+
+function inOrder(root, inArr = []) {
+    if (root !== null) {
+        inOrder(root.left, inArr);
+        inArr.push(root.data);
+        inOrder(root.right, inArr);
+    }
+    return inArr;
+}
+
+function postOrder (root, postArr = []) {
+    if (root !== null) {
+        postOrder(root.left, postArr);
+        postOrder(root.right, postArr);
+        postArr.push(root.data);
+    }
+    return postArr;
 }
 
 function removeDupes(arr) {
@@ -159,10 +180,5 @@ function removeDupes(arr) {
 }
 
 const tree = new BinarySearchTree([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-
-prettyPrint()
-
-
-
 
 
