@@ -96,6 +96,14 @@ class BinarySearchTree {
         }
     }
 
+    height(root = this.root) {
+
+        if (root === null) return -1;
+        const leftHeight = this.height(root.left);
+        const rightHeight = this.height(root.right);
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
     depth(value, root = this.root, depthCount = 0) {
         if (root === null) {
             return "Node not found";
@@ -115,6 +123,11 @@ class BinarySearchTree {
         return depthCount
     }
 }
+
+
+
+
+
 
 
  
@@ -142,7 +155,7 @@ function curLevel(root, levelArr = [], level) {
     return levelArr;
 }
 
-function levelOrder(root, levelArr = []) {
+function levelOrder(root = this.root, levelArr = []) {
     let queue = [];
     queue.push(root);
     while (queue.length !== 0) {
@@ -200,6 +213,5 @@ function removeDupes(arr) {
 
 const tree = new BinarySearchTree([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-
+console.log(tree.height(tree.root.left.right))
 prettyPrint();
-console.log(tree.depth(99))
